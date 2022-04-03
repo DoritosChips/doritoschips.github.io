@@ -29,7 +29,6 @@ if (cookie.includes("record")) {
     record = parseInt(cookie.split('; ').find(row => row.startsWith('record=')).split('=')[1]);
 }
 else {
-    document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(0);
     record = 0;
 }  
 let dirs = [1, 1, 1, 1];
@@ -90,7 +89,7 @@ function mainLoop() {
             length += 1;
             record = Math.max(length - 1, record);
             scoreLabel.innerText = "Score: " + String(length - 1) + ". Record: " + String(record);
-            document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(record);
+            document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(record) + "; max-age=31536000"
             speed -= 1;
             speed = Math.max(speed, maxSpeed)
             apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height - size))];
