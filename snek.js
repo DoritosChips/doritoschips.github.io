@@ -89,7 +89,7 @@ function mainLoop() {
             length += 1;
             record = Math.max(length - 1, record);
             scoreLabel.innerText = "Score: " + String(length - 1) + ". Record: " + String(record);
-            document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(record) + "; max-age=31536000"
+            document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(record);
             speed -= 1;
             speed = Math.max(speed, maxSpeed)
             apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height - size))];
