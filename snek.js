@@ -1,9 +1,10 @@
 const canvas = document.querySelector('.mainCanvas');
 const width = canvas.width = 800;
 const height = canvas.height = 800;
-const fps = 144;
+const fps = 60;
 const size = 25;
-const scoreLabel = document.getElementById('score')
+const scoreLabel = document.getElementById('score');
+let start;
 
 ctx = canvas.getContext('2d');
 ctx.fillStyle = 'black'
@@ -29,6 +30,7 @@ if (cookie.includes("record")) {
     record = parseInt(cookie.split('; ').find(row => row.startsWith('record=')).split('=')[1]);
 }
 else {
+    document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(0);
     record = 0;
 }  
 let dirs = [1, 1, 1, 1];
@@ -36,7 +38,7 @@ let paused = false;
 
 scoreLabel.innerText = "Score: 0. Record: " + String(record);
 
-function mainLoop() {
+function mainLoop(timestamp) {
     if (restart) {
         x = 0, y = 0;
         snake = [[x, y]];
@@ -55,7 +57,20 @@ function mainLoop() {
         paused = false;
     }
     else if (paused || inCheck(snake, x, y)){
+        window.requestAnimationFrame(mainLoop);
         return;
+    }
+
+    if (start === undefined) {
+        start = timestamp;
+    }
+    const elapsed = timestamp - start;
+    if (elapsed < 1 / fps) {
+        window.requestAnimationFrame(mainLoop);
+        return;
+    }
+    else {
+        start = timestamp;
     }
     
     scoreLabel.innerText = "Score: " + String(length - 1) + ". Record: " + String(record);
@@ -100,6 +115,7 @@ function mainLoop() {
             }
         }
     }
+    window.requestAnimationFrame(mainLoop);
 }
 
 function inCheck(snake, x, y) {
@@ -155,4 +171,4 @@ function keyPressed(e) {
 
 document.addEventListener('keydown', keyPressed);
 
-setInterval(function () {mainLoop();}, 1000 / fps);
+window.requestAnimationFrame(mainLoop);
