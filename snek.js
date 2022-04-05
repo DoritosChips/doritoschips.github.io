@@ -1,29 +1,42 @@
+"use sctrict";
+
 const canvas = document.querySelector('.mainCanvas');
 const width = canvas.width = 800;
 const height = canvas.height = 800;
 const fps = 60;
-const size = 25;
-const scoreLabel = document.getElementById('score');
-let start;
+const size = 40;
+let head, snake, length, apple, speed, maxSpeed, time, restart = true, paused, start;
 
 ctx = canvas.getContext('2d');
 ctx.fillStyle = 'black'
 ctx.fillRect(0, 0, width, height)
 
-let x = 0, y = 0;
-let snake = [[x, y]];
-let xdir = 0, ydir = 0;
-let length = 1;
-let apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height- size))];
-apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size,];
-while (inCheck(snake, apple[0], apple[1])) {
-    apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height- size))];
-    apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size,];
+class Direction {
+    constructor(direction = 0) {
+        this.direction = direction;
+    }
 }
-let speed = Math.floor(fps / 6);
-let maxSpeed = Math.floor(fps / 15);
-let time = 0;
-let restart = false;
+
+class Block {
+    constructor(x = getRandomX(), y = getRandomY()) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+let xDirection = new Direction;
+let yDirection = new Direction;
+
+function getRandomX() {
+    x = Math.floor(Math.random() * (width - size));
+    return x - x % size;
+}
+
+function getRandomY() {
+    y = Math.floor(Math.random() * (height- size))
+    return y - y % size;
+}
+
 let record;
 let cookie = document.cookie;
 if (cookie.includes("record")) {
@@ -32,31 +45,47 @@ if (cookie.includes("record")) {
 else {
     document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(0);
     record = 0;
-}  
-let dirs = [1, 1, 1, 1];
-let paused = false;
+}
 
-scoreLabel.innerText = "Score: 0. Record: " + String(record);
+function initGame() {
+    // for (let h = 0; h < height; h++) {
+    //     for (let w = 0; w < width; w++) {
+    //         if (h % 2 == 0 && w % 2 == 0 || h % 2 != 0 && w % 2 != 0)
+    //             ctx.fillStyle = 'rgb(44, 44, 44)';
+    //         else
+    //             ctx.fillStyle = 'rgb(34, 34, 34)';
+    //         ctx.fillRect(h * size, w * size, size, size);
+    //     }
+    // }
+    head = new Block();
+    snake = [];
+    length = 1;
+    apple = new Block();
+    while (inCheck(snake, apple)) {
+        apple.x = getRandomX();
+        apple.y = getRandomY();
+    }
+    speed = Math.floor(fps / 6);
+    maxSpeed = Math.floor(fps / 15);
+    time = 0;
+    restart = false;
+    paused = false;
+}
 
 function mainLoop(timestamp) {
     if (restart) {
-        x = 0, y = 0;
-        snake = [[x, y]];
-        xdir = 0, ydir = 0;
-        length = 1;
-        apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height- size))];
-        apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size,];
-        while (inCheck(snake, apple[0], apple[1])) {
-            apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height- size))];
-            apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size,];
-        }
-        speed = Math.floor(fps / 6);
-        scoreLabel.innerText = "Score: 0. Record: " + String(record);
-        dirs = [1, 1, 1, 1];
-        restart = false;
-        paused = false;
+        initGame();
     }
-    else if (paused || inCheck(snake, x, y)){
+    else if (paused || inCheck(snake, head)){
+        ctx.font = '50px century gothic';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'white';
+        if (paused)
+            ctx.fillText('Paused', width / 2, height / 2);
+        else if (inCheck(snake, head)) {
+            ctx.fillText('Game Over...', width / 2, height / 2 - size);
+            ctx.fillText('Press "r" to restart.', width / 2, height / 2 + size);
+        }
         window.requestAnimationFrame(mainLoop);
         return;
     }
@@ -73,55 +102,57 @@ function mainLoop(timestamp) {
         start = timestamp;
     }
     
-    scoreLabel.innerText = "Score: " + String(length - 1) + ". Record: " + String(record);
-
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'rgb(0, 0, 0)';
     ctx.fillRect(0, 0, width, height);
-    
-    ctx.fillStyle = 'rgb(0, 255, 0)';
-    snake.forEach(i => ctx.fillRect(i[0], i[1], size - 1, size - 1))
+
+    ctx.fillStyle = 'rgb(0, 40, 200)';
+    snake.forEach(block => ctx.fillRect(block.x, block.y, size, size));
+    ctx.fillRect(head.x, head.y, size, size);
 
     ctx.fillStyle = 'rgb(255, 0, 0)';
-    ctx.fillRect(apple[0], apple[1], size - 1, size - 1)
+    ctx.fillRect(apple.x, apple.y, size, size);
 
     time += 1
     if (time % speed == 0) {
-        x += xdir * size;
-        y += ydir * size;
-        if (x > width - size + 1)
-            x = 0;
-        else if (x < 0)
-            x = width - size;
-        if (y > width - size + 1)
-            y = 0;
-        else if (y < 0)
-            y = width - size;
+        if (length > 1) {
+            snake.push(new Block(head.x, head.y));
+            snake = snake.slice(-(length - 1));
+        }
 
-        snake.push([x, y]);
-        snake = snake.slice(-length);
+        head.x += xDirection.direction * size;
+        head.y += yDirection.direction * size;
+        if (head.x > width - size + 1)
+            head.x = 0;
+        else if (head.x < 0)
+            head.x = width - size;
+        if (head.y > height - size + 1)
+            head.y = 0;
+        else if (head.y < 0)
+            head.y = height - size;
 
-        if (x == apple[0] & y == apple[1]) {
+        if (head.x == apple.x && head.y == apple.y) {
             length += 1;
             record = Math.max(length - 1, record);
-            scoreLabel.innerText = "Score: " + String(length - 1) + ". Record: " + String(record);
             document.cookie = encodeURIComponent("record") + '=' + encodeURIComponent(record);
-            speed -= 1;
-            speed = Math.max(speed, maxSpeed)
-            apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height - size))];
-            apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size];
-            while (inCheck(snake, apple[0], apple[1])) {
-                apple = [Math.floor(Math.random() * (width - size)), Math.floor(Math.random() * (height- size))];
-                apple = [apple[0] - apple[0] % size, apple[1] - apple[1] % size,];
+            speed = Math.max(speed - 1, maxSpeed);
+            apple = new Block();
+            while (inCheck(snake, apple)) {
+                apple.x = getRandomX();
+                apple.y = getRandomY();
             }
         }
     }
+    ctx.font = '20px century gothic';
+    ctx.textAlign = 'start';
+    ctx.fillStyle = 'white';
+    ctx.fillText(`Score: ${length - 1}. Record ${record}`, 10, 25);
     window.requestAnimationFrame(mainLoop);
 }
 
-function inCheck(snake, x, y) {
+function inCheck(blockList, blockChecked) {
     result = false;
-    snake.slice(0, -1).forEach(i => {
-        if (i[0] == x & i[1] == y) {
+    blockList.forEach(block => {
+        if (block.x == blockChecked.x && block.y == blockChecked.y) {
             result = true;
         }
     });
@@ -131,39 +162,34 @@ function inCheck(snake, x, y) {
 function keyPressed(e) {
     switch (e.key) {
         case 'ArrowUp':
-            if (dirs[0] & !paused) {
-                ydir = -1;
-                xdir = 0;
-                dirs = [1, 0, 1, 1];
+            if (yDirection.direction != 1 & !paused) {
+                yDirection.direction = -1;
+                xDirection.direction = 0;
             }
             break;
         case 'ArrowDown':
-            if (dirs[1] & !paused) {
-                ydir = 1;
-                xdir = 0;
-                dirs = [0, 1, 1, 1];
+            if (yDirection.direction != -1 & !paused) {
+                yDirection.direction = 1;
+                xDirection.direction = 0;
             }
             break;
         case 'ArrowLeft':
-            if (dirs[2] & !paused) {
-                xdir = -1;
-                ydir = 0;
-                dirs = [1, 1, 1, 0];
+            if (xDirection.direction != 1 & !paused) {
+                xDirection.direction = -1;
+                yDirection.direction = 0;
             }
             break;
         case 'ArrowRight':
-            if (dirs[3] & !paused) {
-                xdir = 1; 
-                ydir = 0;
-                dirs = [1, 1, 0, 1];
+            if (xDirection.direction != -1 & !paused) {
+                xDirection.direction = 1;
+                yDirection.direction = 0;
             }
             break;
         case 'r':
             restart = true;
             break;
         case 'Escape':
-            if (!inCheck(snake, x, y)) {
-                scoreLabel.innerText = "Paused";
+            if (!inCheck(snake, head)) {
                 paused = !paused;
             }
     }
