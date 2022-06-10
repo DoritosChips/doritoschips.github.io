@@ -298,7 +298,7 @@ function generateTimeText(seconds, tens) {
     if (minutesText.length === 1) {
         minutesText = '0' + minutesText;
     }
-    return 'Time: ' + minutes + ':' + secondsText + ':' + tensText;
+    return 'Time: ' + minutesText + ':' + secondsText + ':' + tensText;
 }
 
 document.onmousedown = e => {
