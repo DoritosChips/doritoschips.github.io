@@ -327,7 +327,7 @@ document.onmousedown = e => {
                 for (let cell of invisibleCellsAround) {
                     taggedField[cell] = true;
                 }
-            } else if (taggedCellsAround.length === field[[x, y]]) {
+            } else if (taggedCellsAround.length >= field[[x, y]]) {
                 for (let cell of invisibleCellsAround) {
                     if (field[cell] === 'M') {
                         visibleField[cell] = true;
