@@ -23,6 +23,7 @@ let sizeIndex = 0;
 let interval;
 let seconds;
 let tens;
+let minutes;
 
 let canvas, ctx;
 let field, visibleField, taggedField, handledField;
@@ -209,6 +210,11 @@ function startTimer() {
         seconds++;
         tens = 0;
     }
+    
+    if (seconds > 59) {
+        minutes++;
+        seconds = 0;
+    }
 }
 
 function startGame(startX, startY) {
@@ -250,7 +256,7 @@ function startGame(startX, startY) {
     gameOver = false;
     gameStarted = true;
     drawField();
-    seconds = tens = 0;
+    minutes = seconds = tens = 0;
     clearInterval(interval);
     interval = setInterval(startTimer, 10);
 }
@@ -280,6 +286,7 @@ function winCheck() {
 }
 
 function generateTimeText(seconds, tens) {
+    let minutesText = minutes.toString();
     let secondsText = seconds.toString();
     let tensText = tens.toString();
     if (secondsText.length === 1) {
@@ -288,7 +295,10 @@ function generateTimeText(seconds, tens) {
     if (tensText.length === 1) {
         tensText = '0' + tensText;
     }
-    return 'Time: ' + secondsText + ':' + tensText;
+    if (minutesText.length === 1) {
+        minutesText = '0' + minutesText;
+    }
+    return 'Time: ' + minutes + ':' + secondsText + ':' + tensText;
 }
 
 document.onmousedown = e => {
