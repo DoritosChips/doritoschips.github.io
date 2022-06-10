@@ -439,12 +439,12 @@ okButton.onclick = () => {
 document.onkeydown = (e) => {
     switch (e.keyCode) {
         case 82:
-            if (gameScreen.style.display === 'block){
+            if (gameScreen.style.display === 'block') {
                 restartButton.click();
             }
             break;
         case 27:
-            if (gameScreen.style.display === 'block){
+            if (gameScreen.style.display === 'block') {
                 menuButton.click();
             }
             break;
