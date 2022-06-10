@@ -197,7 +197,7 @@ function init() {
     visibleField = {};
     handledField = {};
     taggedField = {};
-    
+
     gameInitialized = true;
     gameOver = gameStarted = false;
     drawField();
@@ -210,7 +210,7 @@ function startTimer() {
         seconds++;
         tens = 0;
     }
-    
+
     if (seconds > 59) {
         minutes++;
         seconds = 0;
@@ -434,4 +434,16 @@ rightArrow.onclick = () => {
 okButton.onclick = () => {
     gameOverScreen.style.display = 'none';
     menuButton.style.display = restartButton.style.display = 'block';
+}
+
+document.onkeydown = (e) => {
+    switch (e.keyCode) {
+        case 82:
+            restartButton.click();
+            break;
+        case 27:
+            menuButton.click();
+            break;
+    }
+    console.log(e.keyCode)
 }
