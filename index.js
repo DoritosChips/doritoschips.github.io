@@ -251,6 +251,9 @@ function startGame(startX, startY) {
     gameStarted = true;
     drawField();
     seconds = tens = 0;
+    if (interval) {
+        clearInterval(interval);
+    }
     interval = setInterval(startTimer, 10);
 }
 
