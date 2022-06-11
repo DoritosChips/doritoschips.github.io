@@ -449,5 +449,4 @@ document.onkeydown = (e) => {
             }
             break;
     }
-    console.log(e.keyCode)
 }
