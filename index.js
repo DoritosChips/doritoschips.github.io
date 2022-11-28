@@ -21,6 +21,8 @@ const NUMBERS_OF_MINES = [15, 35, 60];
 const minutesSpan = document.getElementById("minutes");
 const secondsSpan = document.getElementById("seconds");
 const tensSpan = document.getElementById("tens");
+const bombsCounterSpan = document.getElementById("bombsCounter");
+const stopwatch = document.getElementById("stopwatch");
 let SIZE;
 let GRID_SIZE;
 let sizeIndex = 0;
@@ -203,6 +205,7 @@ function generateTimeText(minutes, seconds, tens) {
 
 function init() {
     minutesSpan.innerHTML = secondsSpan.innerHTML = tensSpan.innerHTML = '00';
+    bombsCounterSpan.innerHTML = NUMBERS_OF_MINES[sizeIndex];
 
     SIZE = SIZES[sizeIndex];
     GRID_SIZE = 800 / SIZE;
@@ -394,11 +397,20 @@ document.onmousedown = e => {
             handleCell(x, y);
         }
     } else if (e.which === 3) {
+        if (!gameStarted) {
+            return;
+        }
+
         if (!visibleField[[x, y]]) {
             taggedField[[x, y]] = !taggedField[[x, y]];
         }
     }
-
+    
+    let taggedCounter = 0;
+    Object.keys(taggedField).forEach(i => { 
+        taggedCounter += taggedField[i];
+    });
+    bombsCounterSpan.innerHTML = NUMBERS_OF_MINES[sizeIndex] - taggedCounter;
     drawField();
 
     if (winCheck()) {

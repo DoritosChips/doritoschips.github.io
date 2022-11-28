@@ -84,6 +84,22 @@
         #timetext {
             text-align: left;
         }
+        #bombs {
+            width: 150px;
+            height: 50px;
+            margin-left: auto;
+            margin-right: 0;
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+        #bombsCounter {
+            font-family: "Bahnschrift";
+            font-size: 35px;
+            color: #5e5e5e;
+            margin-left: 10px;
+            margin-top: 4px;
+        }
         #newGameButton {
             margin-top: 30px;
         }
@@ -151,6 +167,7 @@
         <img id="menuButton" src="images/menu.png"><br>
         <img id="restartButton" src="images/restart.png"><br>
         <div id="stopwatch"><div id="timeText"><span id="minutes">00</span>:<span id="seconds">00</span>:<span id="tens">00</span></div></div>
+        <div id="bombs"><img src="images/bomb_grey.png" height=40><span id="bombsCounter">10</span></div>
         <canvas id="canvas"></canvas>
         <div id="images">
             <img id="bomb" src="images/bomb.png">
