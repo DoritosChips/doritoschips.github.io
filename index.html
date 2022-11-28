@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>OurSweeper</title>
+    <link rel="icon" href="images/star.ico" type="image/icon type">
+    <style>
+        @font-face { font-family: Bahnschrift; src: url('Bahnschrift.ttf'); } 
+        body {
+            background-color:#1E1E1E;
+
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* Internet Explorer/Edge */
+            user-select: none;
+        }
+        canvas {
+            padding: 0;
+            margin: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        #images {
+            display:none;
+        }
+        #gameScreen {
+            display: none;
+        }
+        #menuScreen {
+            margin: auto;
+            text-align: center;
+            padding-top: 100px;
+        }
+        h1 {
+            color: azure;
+            font-family: "Bahnschrift";
+            font-size: 50px;
+        }
+        button {
+            background-color: #1E1E1E;
+            height: 45px;
+            width: 300px;
+            border: 1px solid grey;
+            border-radius: 100px;
+            color: azure;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-family: "Microsoft New Tai Lue";
+            font-size: 19px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #52B8FE;
+            color: #1E1E1E;
+        }
+        #resumeButton {
+            display:none;
+        }
+        #menuButton {
+            width: 50px;
+            margin-left: 30px;
+            margin-top: 30px;
+        }
+        #restartButton {
+            width: 50px;
+            margin-left: 30px;
+            margin-top: 20px;
+        }
+        #newGameButton {
+            margin-top: 30px;
+        }
+        #sizeSelect {
+            color: azure;
+            font-family: "Microsoft New Tai Lue";
+            font-size: 20px;
+            height: 30px;
+            width: 300px;
+            margin: auto;
+            position: relative;
+        }
+        #leftArrow {
+            position: absolute;
+            left: 0;
+        }
+        #rightArrow {
+            position: absolute;
+            right: 0;
+        }
+        #gameOverScreen {
+            background-color: #161E27;
+            margin: auto;
+            text-align: center;
+            border: 2px solid azure;
+            border-radius: 20px;
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 400px;
+            height: 220px;
+            display: none;
+        }
+        #gameOverHeader {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #time {
+            font-family: "Microsoft New Tai Lue";
+            font-size: 35px;
+            color: azure;
+        }
+        #okButton {
+            width: 150px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <div id="menuScreen">
+        <img id="logo" src="images/logo.png" width=200>
+        <h1 id="menuHeader">Minesweeper</h1>
+        <div id="sizeSelect">
+            <img id="leftArrow" src="images/arrow-left.png" height=20>
+            <span id="size">Small</span>
+            <img id="rightArrow" src="images/arrow-right.png" height=20>
+        </div>
+        <button id="newGameButton">New Game</button><br>
+        <button id="resumeButton">Resume</button>
+    </div>
+    <div id="gameScreen">
+        <img id="menuButton" src="images/menu.png"><br>
+        <img id="restartButton" src="images/restart.png"><br>
+        <canvas id="canvas"></canvas>
+        <div id="images">
+            <img id="bomb" src="images/bomb.png">
+            <img id="flag" src="images/flag.png">
+        </div>
+    </div>
+    <div id="gameOverScreen">
+        <h1 id="gameOverHeader">You won!</h1>
+        <span id="time">Time: 00:00</span><br>
+        <button id="okButton">Got it</button>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
