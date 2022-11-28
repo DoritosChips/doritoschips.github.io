@@ -60,7 +60,7 @@
             color: #1E1E1E;
         }
         #resumeButton {
-            display:none;
+            display: none;
         }
         #menuButton {
             width: 50px;
@@ -71,6 +71,18 @@
             width: 50px;
             margin-left: 30px;
             margin-top: 20px;
+        }
+        #stopwatch {
+            font-family: "Bahnschrift";
+            font-size: 35px;
+            color: #5e5e5e;
+            width: 150px;
+            margin-top: -130px;
+            margin-left: auto;
+            margin-right: 0;
+        }
+        #timetext {
+            text-align: left;
         }
         #newGameButton {
             margin-top: 30px;
@@ -138,6 +150,7 @@
     <div id="gameScreen">
         <img id="menuButton" src="images/menu.png"><br>
         <img id="restartButton" src="images/restart.png"><br>
+        <div id="stopwatch"><div id="timeText"><span id="minutes">00</span>:<span id="seconds">00</span>:<span id="tens">00</span></div></div>
         <canvas id="canvas"></canvas>
         <div id="images">
             <img id="bomb" src="images/bomb.png">

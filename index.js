@@ -18,6 +18,9 @@ const okButton = document.getElementById('okButton');
 const SIZES_NAMES = ['Small', 'Medium', 'Large'];
 const SIZES = [10, 16, 20];
 const NUMBERS_OF_MINES = [15, 35, 60];
+const minutesSpan = document.getElementById("minutes");
+const secondsSpan = document.getElementById("seconds");
+const tensSpan = document.getElementById("tens");
 let SIZE;
 let GRID_SIZE;
 let sizeIndex = 0;
@@ -186,7 +189,21 @@ function drawField() {
     }
 }
 
+function timeToString(time) {
+    let timeText = time.toString();
+    if (timeText.length == 1) {
+        timeText = '0' + timeText;
+    }
+    return timeText;
+}
+
+function generateTimeText(minutes, seconds, tens) {
+    return 'Time: ' + timeToString(minutes) + ':' + timeToString(seconds) + ':' + timeToString(tens);
+}
+
 function init() {
+    minutesSpan.innerHTML = secondsSpan.innerHTML = tensSpan.innerHTML = '00';
+
     SIZE = SIZES[sizeIndex];
     GRID_SIZE = 800 / SIZE;
 
@@ -216,6 +233,10 @@ function startTimer() {
         minutes++;
         seconds = 0;
     }
+
+    minutesSpan.innerHTML = timeToString(minutes);
+    secondsSpan.innerHTML = timeToString(seconds);
+    tensSpan.innerHTML = timeToString(tens);
 }
 
 function startGame(startX, startY) {
@@ -298,22 +319,6 @@ function winCheck() {
     return true;
 }
 
-function generateTimeText(seconds, tens) {
-    let minutesText = minutes.toString();
-    let secondsText = seconds.toString();
-    let tensText = tens.toString();
-    if (secondsText.length === 1) {
-        secondsText = '0' + secondsText;
-    }
-    if (tensText.length === 1) {
-        tensText = '0' + tensText;
-    }
-    if (minutesText.length === 1) {
-        minutesText = '0' + minutesText;
-    }
-    return 'Time: ' + minutesText + ':' + secondsText + ':' + tensText;
-}
-
 document.onmousedown = e => {
     if (gameOver || !gameInitialized) {
         return;
@@ -361,7 +366,7 @@ document.onmousedown = e => {
                         gameOverHeader.innerText = 'You lose :(';
                         gameOverScreen.style.display = 'block';
                         menuButton.style.display = restartButton.style.display = 'none';
-                        timeText.innerText = generateTimeText(seconds, tens);
+                        timeText.innerText = generateTimeText(minutes, seconds, tens);
                         return;
                     }
                 }
@@ -382,7 +387,7 @@ document.onmousedown = e => {
                 gameOverHeader.innerText = 'You lose :(';
                 gameOverScreen.style.display = 'block';
                 menuButton.style.display = restartButton.style.display = 'none';
-                timeText.innerText = generateTimeText(seconds, tens);
+                timeText.innerText = generateTimeText(minutes, seconds, tens);
                 return;
             }
 
@@ -403,7 +408,7 @@ document.onmousedown = e => {
         gameOverHeader.innerText = 'You win!';
         gameOverScreen.style.display = 'block';
         menuButton.style.display = restartButton.style.display = 'none';
-        timeText.innerText = generateTimeText(seconds, tens);
+        timeText.innerText = generateTimeText(minutes, seconds, tens);
     }
 }
 
