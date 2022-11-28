@@ -15,8 +15,9 @@ const sizeText = document.getElementById('size');
 const timeText = document.getElementById('time');
 const gameOverHeader = document.getElementById('gameOverHeader');
 const okButton = document.getElementById('okButton');
-const SIZES_NAMES = ['Small', 'Medium', 'Large']
-const SIZES = [10, 16, 20]
+const SIZES_NAMES = ['Small', 'Medium', 'Large'];
+const SIZES = [10, 16, 20];
+const NUMBERS_OF_MINES = [15, 35, 60];
 let SIZE;
 let GRID_SIZE;
 let sizeIndex = 0;
@@ -218,20 +219,32 @@ function startTimer() {
 }
 
 function startGame(startX, startY) {
-    for (let x = 0; x < SIZE; x++) {
-        for (let y = 0; y < SIZE; y++) {
-            if (Math.random() < 0.18) {
-                field[[x, y]] = 'M';
-            } else {
-                field[[x, y]] = ' ';
-            }
-            if (startX - 1 <= x && x <= startX + 1 && startY - 1 <= y && y <= startY + 1) {
-                field[[x, y]] = ' ';
-            }
-            visibleField[[x, y]] = false;
-            handledField[[x, y]] = false;
-            taggedField[[x, y]] = false;
+    // for (let x = 0; x < SIZE; x++) {
+    //     for (let y = 0; y < SIZE; y++) {
+    //         if (Math.random() < 0.18) {
+    //             field[[x, y]] = 'M';
+    //         } else {
+    //             field[[x, y]] = ' ';
+    //         }
+    //         if (startX - 1 <= x && x <= startX + 1 && startY - 1 <= y && y <= startY + 1) {
+    //             field[[x, y]] = ' ';
+    //         }
+    //         visibleField[[x, y]] = false;
+    //         handledField[[x, y]] = false;
+    //         taggedField[[x, y]] = false;
+    //     }
+    // }
+    for (let i = 0; i < NUMBERS_OF_MINES[sizeIndex]; i++) {
+        let x = Math.floor(Math.random() * SIZE);
+        let y = Math.floor(Math.random() * SIZE);
+        while ((startX - 1 <= x && x <= startX + 1 && startY - 1 <= y && y <= startY + 1) || field[[x, y]]) {
+            x = Math.floor(Math.random() * SIZE); 
+            y = Math.floor(Math.random() * SIZE);
         }
+        field[[x, y]] = 'M';
+        visibleField[[x, y]] = false;
+        handledField[[x, y]] = false;
+        taggedField[[x, y]] = false;
     }
     for (let x = 0; x < SIZE; x++) {
         for (let y = 0; y < SIZE; y++) {
