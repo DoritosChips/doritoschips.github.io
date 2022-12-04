@@ -207,12 +207,13 @@ function init() {
     minutesSpan.innerHTML = secondsSpan.innerHTML = tensSpan.innerHTML = '00';
     bombsCounterSpan.innerHTML = NUMBERS_OF_MINES[sizeIndex];
 
-    SIZE = SIZES[sizeIndex];
-    GRID_SIZE = 800 / SIZE;
-
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
-    canvas.width = canvas.height = SIZE * GRID_SIZE;
+    canvas.width = canvas.height = Math.min(window.innerHeight, window.innerWidth) * 0.9;
+    canvas.width = canvas.height = canvas.height - canvas.height % 20;
+
+    SIZE = SIZES[sizeIndex];
+    GRID_SIZE = canvas.height / SIZE;
 
     field = {};
     visibleField = {};
